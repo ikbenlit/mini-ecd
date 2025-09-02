@@ -1,0 +1,41 @@
+# Env files
+.env
+.env.*
+
+# Service account keys or secrets (beperk tot bekende patronen)
+*service-account*.json
+*sa*.json
+*key*.json
+mini-ecd-*.json
+
+# Build output
+.svelte-kit
+dist
+
+# Node
+node_modules
+
+test-results
+node_modules
+
+# Output
+.output
+.vercel
+.netlify
+.wrangler
+/.svelte-kit
+/build
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
