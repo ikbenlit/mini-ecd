@@ -1,0 +1,71 @@
+---
+description: Global coding standards for Cursor (SvelteKit + TypeScript focus)
+globs: ["**/*.{svelte,ts,js,md}", "src/**", "package.json", "svelte.config.js", "vite.config.ts"]
+alwaysApply: true
+---
+
+# Coding Standards — Cursor Rules (LLM‑friendly)
+
+## Core Principles
+- **DRY**: abstract reusable logic into functions, stores, or components.
+- **SOC**: separate UI, state, and data/IO into distinct modules.
+- **Modularity**: keep files small and single‑purpose.
+- **Functional > OO**: avoid classes for business logic and state.
+- **Explicit typing**: strict TypeScript, no `any`, no `enum`.
+
+## TypeScript
+- Use **interfaces** for objects, **types** for unions/aliases.
+- Derive types from Zod schemas with `z.infer`.
+- Keep all shared types in `src/lib/types`.
+- Strong typing for props, stores, and API I/O.
+
+## Naming
+- Files/dirs: **kebab‑case**.
+- Functions/components: **named exports**.
+- Booleans: verb‑led, e.g. `isLoading`, `hasError`, `canSubmit`.
+
+## Svelte/SvelteKit
+- Structure: `<script>` → markup → `<style>`.
+- Use `$:` reactivity intentionally, not excessively.
+- Stores for cross‑component state; keep small and typed.
+- SSR first: fetch data in `load`, dehydrate minimal to client.
+- Prefer actions/bindings over manual DOM operations.
+
+## UI & Styling
+- Tailwind utility‑first; extract repeated patterns into components.
+- Accessibility by default: semantic HTML, focus states, aria labels.
+- Consistent icons (e.g. lucide‑svelte).
+
+## API Boundaries
+- Validate all I/O with Zod schemas.
+- Endpoints return typed JSON; map errors to correct HTTP status.
+- No secrets in client bundles.
+
+## Performance
+- Code‑split large/rare components.
+- Minimize client JS; avoid redundant fetches.
+- Optimize images: dimensions + lazy + modern formats.
+- Prevent CLS (reserved space, font handling).
+
+## Testing
+- **Unit**: helpers, validators.
+- **E2E**: Playwright smoke tests for key flows.
+- **Snapshot**: fixed prompts → assert structure, not text.
+
+## Git & Tooling
+- Conventional commits (`feat:`, `fix:`, `chore:`).
+- Small, focused PRs.
+- Prettier + ESLint enforced; CI fails on lint errors.
+
+## Definition of Done
+- [ ] DRY, SOC, modular respected.
+- [ ] Strict typing, no `any`/`enum`.
+- [ ] SSR data flow; minimal client JS.
+- [ ] A11y basics (focus, aria, semantics).
+- [ ] Errors typed/handled.
+- [ ] Tests and lint pass.
+
+## Do / Don’t
+**Do**: functional code, typed stores, SSR‑first, validate IO, accessible UI, code‑split.
+**Don’t**: classes for app logic, mixing UI and IO, client‑side secrets, verbose components, dead code.
+```

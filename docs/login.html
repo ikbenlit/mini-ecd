@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mini‑ECD • Inloggen</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* =============================
+       Mini‑ECD Design Tokens
+       ============================== */
+    :root{
+      /* Base */
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --sub-surface: #F1F5F9;
+      --text: #0F172A;
+      --text-2: #475569;
+      --border: #E2E8F0;
+      /* Brand / states */
+      --brand: #3B82F6;
+      --brand-hover: #2563EB;
+      --brand-active: #1D4ED8;
+      --brand-subtle: #EFF6FF;
+      --success: #16A34A;
+      --warning: #EAB308;
+      --error: #DC2626;
+      --error-subtle: #FEF2F2;
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(15,23,42,0.06);
+      --shadow-md: 0 2px 6px rgba(15,23,42,0.08);
+      --shadow-lg: 0 8px 20px rgba(15,23,42,0.10);
+      /* Radius & spacing */
+      --radius: 14px;
+      --radius-sm: 10px;
+      --gap-1: 8px; --gap-2: 12px; --gap-3: 16px; --gap-4: 24px; --gap-5: 32px; --gap-6: 48px;
+    }
+
+    /* Reset & base */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: linear-gradient(120deg, var(--bg), var(--sub-surface));
+      color: var(--text);
+    }
+
+    /* =============================
+       Layout: 42% / 58%
+       ============================= */
+    .page{
+      min-height: 100dvh;
+      display: grid;
+      grid-template-columns: 42% 58%;
+      gap: var(--gap-6);
+      align-items: stretch;
+      padding: var(--gap-6);
+    }
+
+    /* Left: login column */
+    .left{
+      display: grid;
+      align-content: center;
+    }
+
+    .card{
+      width: 100%; max-width: 520px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .card__header{
+      display: grid; gap: var(--gap-2);
+      padding: var(--gap-5) var(--gap-5) var(--gap-4);
+      background: linear-gradient(180deg, var(--brand-subtle), #fff 60%);
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-row{ display:flex; align-items:center; gap: var(--gap-2);}    
+    .logo{
+      inline-size: 44px; block-size: 44px;
+      border-radius: 9px;
+      display: grid; place-items: center;
+      background: var(--brand);
+      color: #fff; font-weight: 700;
+      box-shadow: var(--shadow-sm);
+      letter-spacing: .5px;
+    }
+    .title{ margin:0; font-size: 1.25rem; font-weight: 700; color: var(--text); }
+    .subtitle{ margin:0; font-size: .95rem; color: var(--text-2); }
+
+    .card__body{ padding: var(--gap-5); }
+
+    form{ display: grid; gap: var(--gap-4); }
+
+    .field{ display: grid; gap: var(--gap-1); }
+    .label{ font-size: .9rem; color: var(--text); font-weight: 600; }
+    .hint{ font-size: .85rem; color: var(--text-2); }
+
+    .input{
+      appearance: none;
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid #CBD5E1; /* default border */
+      background: #FFFFFF; color: var(--text);
+      outline: none;
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    .input:hover{ border-color: #94A3B8; }
+    .input:focus{
+      border-color: var(--brand-hover);
+      box-shadow: 0 0 0 2px var(--brand-subtle), 0 0 0 4px var(--brand-hover);
+    }
+    .input[aria-invalid="true"]{ border-color: var(--error); background: var(--error-subtle); }
+
+    .row{ display: flex; align-items: center; justify-content: space-between; gap: var(--gap-2); }
+    .checkbox{ display:flex; align-items:center; gap:10px; font-size:.9rem; color: var(--text-2); }
+    .checkbox input{ inline-size: 18px; block-size: 18px; }
+
+    .actions{ display: grid; gap: var(--gap-2); }
+
+    .btn{
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: .5rem; cursor: pointer; text-decoration: none;
+      border: 1px solid transparent; border-radius: 12px;
+      padding: 12px 14px; font-weight: 600; font-size: 1rem;
+      transition: background .15s ease, color .15s ease, border-color .15s ease, transform .04s ease;
+    }
+    .btn:active{ transform: translateY(1px); }
+
+    .btn--primary{ background: var(--brand); color: #fff; }
+    .btn--primary:hover{ background: var(--brand-hover); }
+    .btn--primary:active{ background: var(--brand-active); }
+    .btn--secondary{ background: #334155; color: #fff; }
+    .btn--secondary:hover{ background: #1F2937; }
+
+    .text-link{ color: #2563EB; text-decoration: none; font-weight: 600; }
+    .text-link:hover{ text-decoration: underline; }
+
+    .error{
+      display: none; /* toggle with .error--show */
+      gap: 8px; align-items: flex-start;
+      background: var(--error-subtle);
+      border: 1px solid rgba(220,38,38,.35);
+      color: #991B1B;
+      padding: 10px 12px; border-radius: 10px;
+      font-size: .9rem;
+    }
+    .error--show{ display: grid; grid-template-columns: 18px 1fr; }
+    .error__dot{ inline-size: 10px; block-size: 10px; border-radius: 999px; background: var(--error); margin-top: 4px; }
+
+    .card__footer{ padding: var(--gap-4) var(--gap-5); background: var(--sub-surface); border-top: 1px solid var(--border); }
+    .muted{ margin:0; color: var(--text-2); font-size: .9rem; text-align: center; }
+
+    /* Right: info column */
+    .right{
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(1200px 600px at 80% 10%, var(--brand-subtle), transparent 60%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: clamp(24px, 3vw, 48px);
+      display: grid;
+      align-content: center;
+    }
+
+    .right::before{
+      content: "";
+      position: absolute;
+      inset: -20% -10% auto auto;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle at 30% 30%, rgba(37,99,235,.18), rgba(37,99,235,.06) 60%, transparent 70%);
+      filter: blur(6px);
+      border-radius: 50%;
+      animation: floatBlob 10s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes floatBlob {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-12px, 10px) scale(1.04); }
+    }
+
+    .right .kicker{ color: var(--brand-active); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; font-size: .8rem; }
+    .right h2{ font-size: clamp(1.4rem, 2.4vw, 2rem); margin: .25rem 0 1rem; }
+    .right p{ color: var(--text-2); max-width: 60ch; }
+
+    .features{ display: grid; gap: 14px; margin-top: var(--gap-4); }
+    .feature{ display:flex; gap:12px; align-items:flex-start; }
+    .dot{ inline-size: 10px; block-size: 10px; border-radius: 999px; background: var(--brand); margin-top: 6px; box-shadow: 0 0 0 4px var(--brand-subtle); }
+
+    .callout{
+      margin-top: var(--gap-5);
+      padding: 14px 16px;
+      background: #ffffffaa;
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .meta{ display:flex; gap: 14px; align-items:center; color: var(--text-2); font-size: .9rem; margin-top: 10px; }
+    .meta .sep{ opacity:.5; }
+
+    /* Appear animations */
+    .fade-up{ opacity:0; transform: translateY(6px); animation: fadeUp .5s ease forwards; }
+    .fade-up.d2{ animation-delay: .08s; }
+    .fade-up.d3{ animation-delay: .16s; }
+    .fade-up.d4{ animation-delay: .24s; }
+    @keyframes fadeUp{ to{ opacity:1; transform: translateY(0); } }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .page{ grid-template-columns: 1fr; padding: var(--gap-5); }
+      .right{ order: 2; margin-top: var(--gap-4); }
+      .left{ order: 1; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <!-- Left column: Login -->
+    <section class="left">
+      <section class="card" aria-labelledby="login-title">
+        <header class="card__header">
+          <div class="brand-row" aria-hidden="true">
+            <div class="logo" aria-hidden="true">ECD</div>
+            <div>
+              <h1 id="login-title" class="title">Inloggen</h1>
+              <p class="subtitle">Toegang tot het Mini‑ECD (demo‑omgeving)</p>
+            </div>
+          </div>
+        </header>
+
+        <div class="card__body">
+          <!-- Error voorbeeld: voeg class .error--show toe op fout -->
+          <div class="error" id="form-error" role="alert" aria-live="polite">
+            <span class="error__dot" aria-hidden="true"></span>
+            <span><strong>Inloggen mislukt.</strong> Controleer uw e‑mail/gebruiker en wachtwoord en probeer het opnieuw.</span>
+          </div>
+
+          <form action="#" method="post" novalidate class="fade-up">
+            <div class="field">
+              <label class="label" for="email">E‑mail of gebruikersnaam</label>
+              <input class="input" id="email" name="email" type="text" inputmode="email" autocomplete="username" required aria-describedby="email-hint" />
+              <div id="email-hint" class="hint">Gebruik uw zorginstelling‑account.</div>
+            </div>
+
+            <div class="field">
+              <div class="row">
+                <label class="label" for="password">Wachtwoord</label>
+                <a href="#" class="text-link">Wachtwoord vergeten?</a>
+              </div>
+              <input class="input" id="password" name="password" type="password" autocomplete="current-password" required />
+            </div>
+
+            <div class="row">
+              <label class="checkbox"><input type="checkbox" name="remember" /> Ingelogd blijven</label>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn btn--primary">Inloggen</button>
+              <button type="button" class="btn btn--secondary" aria-label="Inloggen met extern systeem">Inloggen met Zorg‑ID</button>
+            </div>
+          </form>
+        </div>
+
+        <footer class="card__footer">
+          <p class="muted">Door in te loggen gaat u akkoord met het gebruik van uw gegevens volgens de AVG‑richtlijnen.</p>
+        </footer>
+      </section>
+    </section>
+
+    <!-- Right column: App info -->
+    <aside class="right">
+      <div class="fade-up">
+        <span class="kicker">Mini‑ECD</span>
+        <h2>Sneller werken in de zorg, met veilige en eenvoudige tooling.</h2>
+        <p>
+          Het Mini‑ECD is een demonstratie‑omgeving voor een modern elektronisch cliënt‑/patiëntdossier.
+          Focus op <strong>gebruiksgemak</strong>, <strong>AVG</strong> en <strong>snelheid</strong>. Krijg direct toegang tot
+          intake, afspraken en verslaglegging.
+        </p>
+
+        <div class="features">
+          <div class="feature fade-up d2"><span class="dot" aria-hidden="true"></span><div><strong>Single‑Sign‑On</strong> / Zorg‑ID integratie (demo).</div></div>
+          <div class="feature fade-up d3"><span class="dot" aria-hidden="true"></span><div><strong>Rol‑gebaseerde toegang</strong> met audit trail.</div></div>
+          <div class="feature fade-up d4"><span class="dot" aria-hidden="true"></span><div><strong>Privacy by design</strong>: minimale data, maximale controle.</div></div>
+        </div>
+
+        <div class="callout fade-up d4" role="note">
+          <strong>Nieuw:</strong> Cliëntdashboard met intake‑samenvatting en agenda‑tegels.
+          <div class="meta"><span>Versie 0.1‑MVP</span><span class="sep">•</span><span>Laatste update: vandaag</span></div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    // Demo‑script: togglet error state bij lege submit
+    document.querySelector('form').addEventListener('submit', function(e){
+      e.preventDefault();
+      const email = document.getElementById('email');
+      const pass  = document.getElementById('password');
+      const err   = document.getElementById('form-error');
+      const invalid = !email.value || !pass.value;
+      email.setAttribute('aria-invalid', invalid && !email.value ? 'true':'false');
+      pass.setAttribute('aria-invalid', invalid && !pass.value ? 'true':'false');
+      err.classList.toggle('error--show', invalid);
+    });
+  </script>
+</body>
+</html>

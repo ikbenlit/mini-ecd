@@ -118,7 +118,27 @@ Legenda: Ⓢ = Stretch (optioneel voor demo).
 ### 5.1 Overzicht (start)
 
 * **Doel:** snelle oriëntatie.
-* **Widgets:** laatste 3 verslagen, huidige Probleemprofiel (badge severity), laatst gepubliceerde Behandelplan (versie), openstaande taken (bv. “Profiel nog niet bevestigd”).
+* **Widgets (tegels):**
+  * Kaartenlayout in 2–3 kolommen (afhankelijk van schermbreedte).
+  * Elke kaart bevat titel + kerngegevens + CTA/link naar het onderdeel.
+  * Inhoud per tegel:
+    * Basisgegevens: ClientID, Naam, Geboortedatum.
+    * Intake: verkorte weergave laatste intakeverslag.
+    * Probleemprofiel: DSM‑light categorie + severity‑badge.
+    * Behandelplan: doelen in bullets + statuslabel.
+    * Afspraken: laatste afspraak + eerstvolgende 3 afspraken.
+* **Visuele hiërarchie:**
+  * Severity‑badge in kleur (laag = grijs, middel = amber, hoog = rood).
+  * Behandelplan‑status met label (concept, definitief).
+  * Afspraken met datum‑chip.
+* **Interactie:** klik op tegel → detailweergave van dat onderdeel.
+* **Configuratie:**
+  * Een `settings` (tandwiel) icoon-knop rechtsboven op de overzichtspagina.
+  * Klik opent een dropdown/popover met checkboxes voor elke tegel (Basisgegevens, Intake, etc.).
+  * De keuze wordt lokaal (localStorage) of per gebruiker opgeslagen.
+* **Responsief:**
+  * Desktop: grid met 2–3 tegels naast elkaar.
+  * Tablet/mobiel: 1 kolom (tegels stacked).
 * **CTA’s:** *Nieuw verslag*, *Naar Probleemprofiel*, *Genereer Behandelplan*.
 
 ### 5.2 Intakeverslagen
@@ -191,7 +211,27 @@ Legenda: Ⓢ = Stretch (optioneel voor demo).
 
 ## 9) States, leeg‑staten & foutafhandeling
 
-* **Leeg‑staten**: educatief + primaire CTA.
+* **Leeg‑staten**: Educatief, visueel ondersteund en voorzien van een duidelijke primaire Call to Action (CTA). Ze worden gecentreerd in het content-paneel weergegeven.
+    *   **Cliëntenlijst**:
+        *   **Icoon**: `Users`
+        *   **Titel**: `Nog geen cliënten gevonden`
+        *   **Omschrijving**: `Begin met het inschrijven van uw eerste cliënt om een dossier op te bouwen.`
+        *   **CTA**: `+ Nieuwe cliënt inschrijven`
+    *   **Intakeverslagen**:
+        *   **Icoon**: `FileText`
+        *   **Titel**: `Geen intakeverslagen`
+        *   **Omschrijving**: `Leg het eerste consult vast. Een goed intakeverslag is de basis voor AI-suggesties.`
+        *   **CTA**: `+ Nieuw verslag aanmaken`
+    *   **Probleemprofiel**:
+        *   **Icoon**: `ClipboardList`
+        *   **Titel**: `Probleemprofiel is nog leeg`
+        *   **Omschrijving**: `Stel een probleemprofiel op. Gebruik de AI-assistent om problemen te extraheren uit een intakeverslag voor een vliegende start.`
+        *   **CTA**: `Ga naar Intakeverslagen`
+    *   **Behandelplan**:
+        *   **Icoon**: `Goal`
+        *   **Titel**: `Klaar om een behandelplan op te stellen`
+        *   **Omschrijving**: `Gebruik het vastgestelde probleemprofiel om met hulp van AI een concept-behandelplan te genereren.`
+        *   **CTA**: `Genereer behandelplan met AI`
 * **Loading**: skeletons voor lijst, shimmer in kaarten.
 * **Fouten**: inline onder veld + toast met *Details weergeven*.
 * **Beperkingen**: Behandelplan disabled tot er een (bevestigd) Probleemprofiel is.

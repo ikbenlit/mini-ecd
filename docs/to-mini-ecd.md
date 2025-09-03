@@ -44,8 +44,22 @@ Browser (UI)
 
 ### 1.3 State
 
-* UI‑state met **Svelte stores**.
-* Server‑state via endpoints + Firebase client (browser) voor real-time reads, writes bij voorkeur via server endpoints voor consistente validatie.
+De state van de applicatie wordt beheerd met Svelte's ingebouwde, reactieve stores (`writable`, `readable`, `derived`). Dit is lichtgewicht en krachtig genoeg voor de scope van dit project. De stores worden georganiseerd in `src/lib/stores/`.
+
+*   **`client.store.ts`**: Beheert de state gerelateerd aan cliëntdata.
+    *   `selectedClientId = writable<string | null>(null)`: Houdt het ID van de actieve cliënt bij. Dit is de centrale spil van de applicatie-staat.
+    *   `clients = writable<Client[]>`: De lijst van alle cliënten voor de overzichtspagina.
+    *   `currentClientDossier = readable<Dossier | null>`: Een `readable` of custom store die reageert op wijzigingen in `selectedClientId`. Wanneer de ID verandert, haalt deze store automatisch de volledige dossierinhoud (intakes, profiel, plan) op voor de geselecteerde cliënt.
+
+*   **`ui.store.ts`**: Beheert globale UI-state.
+    *   `toasts = writable<ToastMessage[]>`: Een array met actieve 'toast'-notificaties die globaal getoond kunnen worden.
+
+*   **Dataflow Patroon**:
+    1.  De UI zet de `selectedClientId`.
+    2.  De `currentClientDossier` store detecteert de wijziging en haalt de benodigde data op.
+    3.  Componenten die geabonneerd zijn op `$currentClientDossier` (bv. `+page.svelte` in de dossier-route) updaten automatisch.
+
+Dit patroon zorgt voor een efficiënte, voorspelbare en reactieve dataflow door de hele applicatie.
 
 ---
 
@@ -232,6 +246,22 @@ service cloud.firestore {
 * **Nodes**: paragraph, heading, bold/italic/underline, bullet/ordered list, blockquote, code (optioneel).
 * **Opslag**: `content_json` (ProseMirror doc).
 * **AI‑Right‑rail**: tabs: Samenvatten, B1, Extract; acties **Preview → Insert**.
+
+### 5.4 Haalbaarheidsonderzoek: AI Source Highlighting
+
+Een belangrijke UX-vereiste is het visueel aanduiden (highlighten) van de bronzinnen in de intaketekst die de AI heeft gebruikt voor een suggestie. Dit is technisch goed haalbaar.
+
+**Aanpak:**
+
+1.  **Backend API Aanpassing**: Het AI-endpoint (bv. `/api/ai/extract`) moet niet alleen de suggestie retourneren, maar ook een array van de exacte bronzinnen (`sourceSentences: string[]`).
+2.  **Frontend TipTap Implementatie**:
+    *   De frontend gebruikt de [TipTap Decorations API](https://tiptap.dev/api/decorations) om de highlighting te realiseren. Decorations passen styling toe zonder de onderliggende content te wijzigen.
+    *   Bij ontvangst van de `sourceSentences` doorzoekt de frontend het TipTap-document naar de posities (`from`, `to`) van deze zinnen.
+    *   Voor elke gevonden positie wordt een `Decoration.inline(from, to, { class: 'ai-source-highlight' })` aangemaakt.
+3.  **Styling**: Een simpele CSS-klasse `.ai-source-highlight` (bv. met een lichtgele achtergrond) wordt toegevoegd aan de globale stylesheet.
+4.  **Lifecycle**: De highlights worden gewist zodra de gebruiker de suggestie accepteert, negeert, of een nieuwe AI-actie initieert.
+
+**Conclusie**: De aanpak is robuust en de complexiteit is laag tot gemiddeld. Het wordt meegenomen in de PoC voor de TipTap-editor.
 
 ### 5.3 Toetsenbord & UX
 

@@ -30,13 +30,24 @@ Focus ligt op het **zichtbaar maken van AI-waarde** (samenvatten, structureren, 
    * Automatische ClientID.
    * Verschijnt in Cliëntenlijst.
 
-2. **Intake-verslag maken**
+2. **Overzicht (Cliëntdashboard)**
+
+   * Tegels:
+
+     * Basisgegevens: ClientID, Naam, Geboortedatum.
+     * Intake: verkorte weergave laatste intakeverslag.
+     * Probleemprofiel: DSM-light categorie + severity-badge.
+     * Behandelplan: doelen in bullets + status.
+     * Afspraken: laatste afspraak + eerstvolgende 3 afspraken.
+   * Configuratie: gebruiker kan via een instellingen-knop kiezen welke tegels zichtbaar zijn.
+
+3. **Intake-verslag maken**
 
    * Rich text editor.
    * Tags: Intake / Evaluatie / Plan.
    * Opslaan & koppelen aan cliënt.
 
-3. **Probleemprofiel (DSM-light simulatie)**
+4. **Probleemprofiel (DSM-light simulatie)**
 
    * Dropdown categorieën (simulatie DSM-5 hoofdcategorieën):
 
@@ -50,7 +61,7 @@ Focus ligt op het **zichtbaar maken van AI-waarde** (samenvatten, structureren, 
    * Vrij veld: opmerkingen.
    * **AI-suggestie:** intake analyseren → voorstel categorie + severity.
 
-4. **AI-ondersteuning bij verslag**
+5. **AI-ondersteuning bij verslag**
 
    * Knoppen:
 
@@ -58,16 +69,16 @@ Focus ligt op het **zichtbaar maken van AI-waarde** (samenvatten, structureren, 
      * *Verbeter leesbaarheid* (B1-niveau).
      * *Extract problemen* (AI vult categorie/severity suggestie in).
 
-5. **AI-voorstel behandelplan**
+6. **AI-voorstel behandelplan**
 
    * Genereert secties: Doelen, Interventies, Frequentie/Duur, Meetmomenten.
    * Gebruiker kan bewerken of accepteren.
 
-6. **Mini-agenda (optioneel, stretch)**
+7. **Mini-agenda (optioneel, stretch)**
 
    * Afspraak plannen gekoppeld aan cliënt.
 
-7. **Rapport export (stretch)**
+8. **Rapport export (stretch)**
 
    * PDF: cliëntgegevens + intake + probleemprofiel + behandelplan.
 
@@ -107,6 +118,7 @@ Focus ligt op het **zichtbaar maken van AI-waarde** (samenvatten, structureren, 
 * Herkenbare flow (intake → profiel → plan).
 * AI-output direct zichtbaar en bewerkbaar.
 * Minimaal 1 deelnemer kan live een cliënt toevoegen.
+* Deelnemers aan de workshop begrijpen de toegevoegde waarde van AI in het ECD-proces.
 
 ---
 

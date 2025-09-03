@@ -1,57 +1,28 @@
 <script lang="ts">
-	import Header from './Header.svelte';
 	import '../app.css';
+	import AppLayout from '$lib/components/layout/AppLayout.svelte';
+	import { onMount } from 'svelte';
+	import { authStore, isAuthenticated } from '$lib/stores/auth';
+	import { page } from '$app/stores';
+	import type { LayoutData } from './$types';
 
-	let { children } = $props();
+	export let data: LayoutData;
+
+	// Initialize auth store with server-side session data and set up listener (only once)
+	onMount(() => {
+		// Initialize auth store (sets up auth state listener and uses server data)
+		authStore.initializeAuth(data);
+	});
+
+	// Check if we're on an auth route (which has its own layout)
+	$: isAuthRoute = $page.route.id?.startsWith('/(auth)');
 </script>
 
-<div class="app">
-	<Header />
-
-	<main>
-		{@render children()}
-	</main>
-
-	<footer>
-		<p>
-			visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to learn about SvelteKit
-		</p>
-	</footer>
-</div>
-
-<style>
-	.app {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-	}
-
-	main {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		padding: 1rem;
-		width: 100%;
-		max-width: 64rem;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-
-	footer {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 12px;
-	}
-
-	footer a {
-		font-weight: bold;
-	}
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 12px 0;
-		}
-	}
-</style>
+<!-- Use AppLayout only for authenticated routes, auth routes handle their own layout -->
+{#if isAuthRoute}
+	<slot />
+{:else}
+	<AppLayout>
+		<slot />
+	</AppLayout>
+{/if}
