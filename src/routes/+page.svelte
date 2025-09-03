@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import { user } from '$lib/stores/auth';
+	import { page } from '$app/stores';
+
+	$: user = $page.data.user;
 
 	// This page only renders for authenticated users due to server-side guards
 	// The server hook already handles redirects to /login for unauthenticated users
@@ -16,7 +18,7 @@
 	<div class="border-b pb-4">
 		<h1 class="text-3xl font-bold text-gray-900">Mini-ECD Dashboard</h1>
 		<p class="text-gray-600 mt-2">
-			Welkom terug{#if $user}, {$user.email}{/if}. Beheer uw cliënten en behandelplannen.
+			Welkom terug{#if user}, {user.email}{/if}. Beheer uw cliënten en behandelplannen.
 		</p>
 	</div>
 

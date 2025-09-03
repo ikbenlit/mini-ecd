@@ -21,6 +21,46 @@ Aan de AI dit bestand bewerkt: voeg de laatste session log boven de laatste entr
 Einde SESSIONLOG-Template
 ---
 
+### 📅 2025-09-05 - Session #13 | Complete Authenticatie Refactor & Client Data Flow
+    
+**Focus:** Diagnosticeren en definitief oplossen van kritieke authenticatieproblemen (redirect loops, lege lijsten) en het correct implementeren van de data flow voor de cliëntenlijst.
+**Goal:** Een stabiele, werkende applicatiebasis met een robuuste login, correcte datakoppeling met Supabase, en een functionele drie-koloms dossier-layout.
+
+**🏆 MAJOR ACHIEVEMENTS:**
+- [x] **Lege Cliëntenlijst Opgelost**
+  - ✅ Oorzaak geïdentificeerd: Supabase Row Level Security (RLS) blokkeerde anonieme server-side requests.
+  - ✅ Foutieve "policy exists" errors opgelost door `DROP POLICY IF EXISTS` toe te voegen aan het RLS-script, wat het idempotent maakt.
+  - ✅ Correcte, publieke `SELECT` policy voor de `clients` tabel geïmplementeerd, waardoor de data correct wordt geladen.
+- [x] **Volledige Authenticatie Refactor naar Supabase SSR**
+  - ✅ Oorzaak "redirect loops" & "flickering" geïdentificeerd: incorrecte client-side Supabase initialisatie.
+  - ✅ Gehele auth-flow omgebouwd naar de officiële `@supabase/ssr` library-aanpak.
+  - ✅ `src/routes/+layout.ts` aangemaakt voor correcte client-side initialisatie, wat de `createBrowserClient` fouten oploste.
+  - ✅ Foute `supabase-client.ts` helper en complexe `auth.ts` store verwijderd en vervangen door een centrale, SvelteKit-native datastroom.
+- [x] **Data Flow en UI gecorrigeerd**
+  - ✅ `ClientList.svelte` toont nu de 3 cliënten uit de Supabase database.
+  - ✅ Navigatie van de cliëntenlijst naar de detailpagina (`/clients/[id]`) werkt nu correct.
+  - ✅ Foutieve imports (`$lib/stores/auth`) in `+page.svelte` en andere componenten opgespoord en gerepareerd.
+
+**Key Technical Wins:**
+- ✅ **Supabase SSR Implementatie**: De authenticatie is nu gebouwd volgens de best practices van Supabase voor SvelteKit, wat zorgt voor stabiliteit.
+- ✅ **Idempotente SQL Scripts**: Het RLS-script is robuust gemaakt en kan veilig herhaaldelijk worden uitgevoerd.
+- ✅ **Gedecentraliseerde State**: De state (user, session, supabase-client) wordt nu correct beheerd door SvelteKit's `load` functies en de `$page` store, in plaats van een complexe, custom store.
+
+**Scope Management Success:**
+- ✅ **Focus op Fundament**: De sessie bleef gefocust op het repareren van de kapotte applicatiebasis (auth & data) voordat nieuwe features werden toegevoegd.
+- 🚫 **Geen nieuwe UI**: Bewust geen nieuwe UI-elementen gebouwd, alle energie ging naar het oplossen van de onderliggende technische problemen.
+
+**Lessons Learned:**
+- De `@supabase/ssr` library vereist een zeer specifieke implementatie in `hooks.server.ts`, `+layout.server.ts`, én `+layout.ts` om correct te werken. Een missende stap leidt tot moeilijk te debuggen fouten.
+- RLS-policies die anonieme server-requests blokkeren zijn een veelvoorkomende oorzaak van 'lege data' zonder duidelijke server-foutmeldingen.
+- Het verwijderen van complexe, custom stores ten gunste van SvelteKit's ingebouwde state management (`$page.data`) leidt tot veel eenvoudiger en beter voorspelbare code.
+
+**Huidige Status:**
+- **Applicatie**: ✅ **STABIEL & OPERATIONEEL** - Inloggen, navigeren en data ophalen werkt.
+- **Volgende stappen**: Het vullen van het "Dossier Overzicht" paneel met de data van de geselecteerde cliënt.
+
+---
+
 ### 📅 2025-09-04 - Session #12 | Login & Authenticatie Flow Opgelost
 
 **Focus:** Oplossen van het hardnekkige probleem waarbij gebruikers na een succesvolle login werden teruggestuurd naar de login-pagina.

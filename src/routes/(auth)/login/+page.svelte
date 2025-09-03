@@ -4,12 +4,14 @@
 	import InfoPanel from '$lib/components/auth/InfoPanel.svelte';
 	
 	// Auth logic - will be integrated with LoginCard in later phases
-	import { AuthService, loginSchema, getAuthErrorMessage, type LoginForm } from '$lib/utils/auth';
-	import { authStore, isAuthenticated } from '$lib/stores/auth';
-	import { goto } from '$app/navigation';
+	import { AuthService, getAuthErrorMessage, loginSchema } from '$lib/utils/auth';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
+	import type { PageData } from './$types';
 
-	// Form state
+	export let data: PageData;
+	$: ({ supabase } = data);
+
 	let formData = {
 		email: '',
 		password: ''
@@ -17,37 +19,33 @@
 	let isLoading = false;
 	let error = '';
 
-	// Reactive redirect
-	// When isAuthenticated becomes true, navigate to the desired page.
-	isAuthenticated.subscribe(loggedIn => {
-		if (loggedIn) {
-			const redirectTo = $page.url.searchParams.get('redirectTo') ?? '/';
-			goto(redirectTo, { invalidateAll: true });
-		}
-	});
+	$: if ($page.data.session) {
+		const redirectTo = $page.url.searchParams.get('redirectTo') ?? '/clients';
+		goto(redirectTo, { invalidateAll: true });
+	}
 
 	async function handleSubmit() {
 		isLoading = true;
 		error = '';
 
+		const authService = new AuthService(supabase);
 		// Validate form data
 		const validation = loginSchema.safeParse(formData);
 		if (!validation.success) {
 			// Get the first error message
-			error = validation.error.errors[0].message;
+			error = validation.error.issues[0].message;
 			isLoading = false;
 			return;
 		}
 
 		try {
-			const result = await AuthService.signIn(formData.email, formData.password);
+			const result = await authService.signIn(formData.email, formData.password);
 			
 			if (result.error) {
 				error = getAuthErrorMessage(result.error);
 			}
-			// On successful login, the onAuthStateChange listener in the auth store
-			// will update the isAuthenticated store, which triggers the redirect above.
-			// No manual goto() is needed here.
+			// On success, the onAuthStateChange listener in the root layout
+			// will update the session, which triggers the reactive redirect above.
 
 		} catch (err) {
 			error = 'Er is een onverwachte fout opgetreden tijdens het inloggen.';
@@ -55,6 +53,23 @@
 		}
 
 		isLoading = false;
+	}
+
+	async function handleGoogleLogin() {
+		console.log('[Google Login] Starting Google sign-in process...');
+		try {
+			const authService = new AuthService(supabase);
+			const { error: signInError } = await authService.signInWithGoogle();
+			if (signInError) {
+				console.error('[Google Login] Supabase returned an error:', signInError);
+				error = getAuthErrorMessage(signInError);
+			} else {
+				console.log('[Google Login] signInWithGoogle call successful, redirecting to Google...');
+			}
+		} catch (err) {
+			console.error('[Google Login] An unexpected error occurred:', err);
+			error = 'Kon niet inloggen met Google door een onverwachte fout.';
+		}
 	}
 </script>
 
@@ -67,7 +82,14 @@
 <main class="page">
 	<!-- Left column: Login (42%) -->
 	<section class="left">
-		<LoginCard {error} {isLoading} onSubmit={handleSubmit} bind:email={formData.email} bind:password={formData.password} />
+		<LoginCard
+			{error}
+			{isLoading}
+			onSubmit={handleSubmit}
+			onGoogleLogin={handleGoogleLogin}
+			bind:email={formData.email}
+			bind:password={formData.password}
+		/>
 	</section>
 
 	<!-- Right column: Info Panel (58%) -->

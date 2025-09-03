@@ -1,5 +1,4 @@
-import { supabase } from '$lib/supabase';
-import type { User, AuthError, Session } from '@supabase/supabase-js';
+import type { SupabaseClient, User, AuthError, Session } from '@supabase/supabase-js';
 import { z } from 'zod';
 
 export const loginSchema = z.object({
@@ -7,14 +6,16 @@ export const loginSchema = z.object({
 	password: z.string().min(6, 'Wachtwoord moet minimaal 6 tekens zijn')
 });
 
-export const signupSchema = z.object({
-	email: z.string().email('Ongeldig e-mailadres'),
-	password: z.string().min(6, 'Wachtwoord moet minimaal 6 tekens zijn'),
-	confirmPassword: z.string()
-}).refine((data) => data.password === data.confirmPassword, {
-	message: "Wachtwoorden komen niet overeen",
-	path: ["confirmPassword"]
-});
+export const signupSchema = z
+	.object({
+		email: z.string().email('Ongeldig e-mailadres'),
+		password: z.string().min(6, 'Wachtwoord moet minimaal 6 tekens zijn'),
+		confirmPassword: z.string()
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: 'Wachtwoorden komen niet overeen',
+		path: ['confirmPassword']
+	});
 
 export type LoginForm = z.infer<typeof loginSchema>;
 export type SignupForm = z.infer<typeof signupSchema>;
@@ -26,12 +27,18 @@ export interface AuthResult {
 }
 
 export class AuthService {
-	static async signUp(email: string, password: string): Promise<AuthResult> {
-		const { data, error } = await supabase.auth.signUp({
+	private supabase: SupabaseClient;
+
+	constructor(supabase: SupabaseClient) {
+		this.supabase = supabase;
+	}
+
+	async signUp(email: string, password: string): Promise<AuthResult> {
+		const { data, error } = await this.supabase.auth.signUp({
 			email,
 			password
 		});
-		
+
 		return {
 			user: data.user,
 			session: data.session,
@@ -39,12 +46,12 @@ export class AuthService {
 		};
 	}
 
-	static async signIn(email: string, password: string): Promise<AuthResult> {
-		const { data, error } = await supabase.auth.signInWithPassword({
+	async signIn(email: string, password: string): Promise<AuthResult> {
+		const { data, error } = await this.supabase.auth.signInWithPassword({
 			email,
 			password
 		});
-		
+
 		return {
 			user: data.user,
 			session: data.session,
@@ -52,19 +59,19 @@ export class AuthService {
 		};
 	}
 
-	static async signInWithGithub(): Promise<{ error: AuthError | null }> {
-		const { error } = await supabase.auth.signInWithOAuth({
+	async signInWithGithub(): Promise<{ error: AuthError | null }> {
+		const { error } = await this.supabase.auth.signInWithOAuth({
 			provider: 'github',
 			options: {
 				redirectTo: `${window.location.origin}/auth/callback`
 			}
 		});
-		
+
 		return { error };
 	}
 
-	static async signInWithGoogle(): Promise<{ error: AuthError | null }> {
-		const { error } = await supabase.auth.signInWithOAuth({
+	async signInWithGoogle(): Promise<{ error: AuthError | null }> {
+		const { error } = await this.supabase.auth.signInWithOAuth({
 			provider: 'google',
 			options: {
 				redirectTo: `${window.location.origin}/auth/callback`
@@ -74,37 +81,41 @@ export class AuthService {
 		return { error };
 	}
 
-	static async signOut(): Promise<{ error: AuthError | null }> {
-		const { error } = await supabase.auth.signOut();
+	async signOut(): Promise<{ error: AuthError | null }> {
+		const { error } = await this.supabase.auth.signOut();
 		return { error };
 	}
 
-	static async getCurrentUser(): Promise<User | null> {
-		const { data: { user } } = await supabase.auth.getUser();
+	async getCurrentUser(): Promise<User | null> {
+		const {
+			data: { user }
+		} = await this.supabase.auth.getUser();
 		return user;
 	}
 
-	static async getCurrentSession(): Promise<Session | null> {
-		const { data: { session } } = await supabase.auth.getSession();
+	async getCurrentSession(): Promise<Session | null> {
+		const {
+			data: { session }
+		} = await this.supabase.auth.getSession();
 		return session;
 	}
 
-	static async resetPassword(email: string): Promise<{ error: AuthError | null }> {
-		const { error } = await supabase.auth.resetPasswordForEmail(email, {
+	async resetPassword(email: string): Promise<{ error: AuthError | null }> {
+		const { error } = await this.supabase.auth.resetPasswordForEmail(email, {
 			redirectTo: `${window.location.origin}/auth/reset-password`
 		});
-		
+
 		return { error };
 	}
 
-	static onAuthStateChange(callback: (event: string, session: Session | null) => void) {
-		return supabase.auth.onAuthStateChange(callback);
+	onAuthStateChange(callback: (event: string, session: Session | null) => void) {
+		return this.supabase.auth.onAuthStateChange(callback);
 	}
 }
 
 export function getAuthErrorMessage(error: AuthError | null): string {
 	if (!error) return '';
-	
+
 	switch (error.message) {
 		case 'Invalid login credentials':
 			return 'Ongeldige inloggegevens';

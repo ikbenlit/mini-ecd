@@ -32,19 +32,20 @@
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│  Topbalk (cliëntcontext):  Naam • ClientID • Geboortedatum • Acties          │
+│ ✅ Mini-ECD                      🔍 Zoekbalk...                  👤 User Menu     │
 ├──────────────┬───────────────────────────────────────────────────────────────┤
-│ Linkernav    │  Middenpaneel (detail van geselecteerd dossieronderdeel)     │
-│ (Dossier)    │                                                               │
-│  • Overzicht │  Header + acties (Opslaan, AI‑knoppen)                        │
-│  • Intake    │  Content area (form/editor/tabel)                             │
-│  • Profiel   │  Right rail (optioneel): hints/validatie/AI‑output            │
-│  • Plan      │                                                               │
-│  • Afspr. Ⓢ  │                                                               │
-│  • Rapport Ⓢ │                                                               │
-├──────────────┴───────────────────────────────────────────────────────────────┤
-│ Footer (status/toasts/laatste sync)                                          │
-└──────────────────────────────────────────────────────────────────────────────┘
+│ Dossier      │ 🖼️ Mini-ECD Dashboard                                           │
+│  • Overzicht │   Welkom terug, [user]...                                       │
+│  • Intake    │                                                               │
+│  • Profiel   │   ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐   │
+│  • Plan      │   │ Nieuwe Client   │ │ Intake Maken    │ │ Rapportage      │   │
+│              │   └─────────────────┘ └─────────────────┘ └─────────────────┘   │
+│              │                                                               │
+│              │   📈 Recente Activiteit                                         │
+│              │   ───────────────────────────────────────────────────────────   │
+│              │    - Nieuwe client aangemeld ....................... [Voltooid] │
+│              │    - Intake rapport gegenereerd .................. [AI Rapport] │
+└──────────────┴───────────────────────────────────────────────────────────────┘
 ```
 
 Legenda: Ⓢ = Stretch (optioneel voor demo).
@@ -61,15 +62,15 @@ Legenda: Ⓢ = Stretch (optioneel voor demo).
 **Linkernavigatie (dossier)**
 
 * Type: verticale tree/folder‑navigatie (shadcn `NavigationMenu`/`ScrollArea`).
-* Items: Overzicht, Intakeverslagen, Probleemprofiel, Behandelplan, (Afspraken), (Rapporten).
-* States: **actief** (highlight), **hover**, **disabled** (indien afhankelijkheden ontbreken, bijv. Behandelplan vóór Probleemprofiel).
+* Items: Overzicht, Intake, Profiel, Plan.
+* States: **actief** (highlight), **hover**.
 * Secondary actions per item (on hover ⋯): *Nieuw verslag*, *Dupliceer*, *Export*.
 
-**Topbalk (cliëntcontext)**
+**Topbalk (Globaal)**
 
-* Links: Breadcrumbs `Cliënten › {Naam}`.
-* Midden: **Naam**, **ClientID**, **Geb.datum**; badges voor *Nieuw*/*Concept*.
-* Rechts: **Zoek** (Cmd/Ctrl+K), **Opslaan** (primary), **Meer** (⋯): *Download PDF*, *Archiveer*, *Verwijder*.
+* Links: **Logo** (icoon + "Mini-ECD").
+* Midden: Globale **Zoekbalk**.
+* Rechts: **Notificaties** (bel-icoon) en **Gebruikersmenu** (naam, rol, avatar, uitlog-knop).
 
 **Toasts & status**
 

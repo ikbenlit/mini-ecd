@@ -1,6 +1,6 @@
 # Mini‑ECD – Gefaseerd Bouwplan (Implementatie)
 
-**Laatste update:** 3 september 2025
+**Laatste update:** 4 september 2025
 **Status:** Fase 1 (Data & Supabase) - 🟢 **COMPLEET** (19/19 taken)
 **Next Phase:** Fase 2 (App-skelet & UI) - Layout, navigatie, basis components
 
@@ -44,7 +44,7 @@ Een *mini‑ECD* (MVP) bouwen voor een live demo tijdens de AI‑inspiratiesessi
 | **3** | **Cliënten** | ⚪ TO DO | Routes + API endpoints nodig |
 | 3.1   | Client Management | ⚪ TO DO | |
 | 3.2   | Dossier Weergave | ⚪ TO DO | |
-| **4** | **Intake & Editor** | ⚪ TO DO | TipTap ontbreekt |
+| **4** | **Intake & Editor** | ⚪ TO DO | TipTap geïnstalleerd |
 | 4.1   | Editor Functionaliteit | ⚪ TO DO | |
 | 4.2   | AI-assistentie | ⚪ TO DO | |
 | **5** | **Probleemprofiel** | ⚪ TO DO | Afhankelijk van Fase 1+4 |
@@ -113,10 +113,8 @@ Deze fase omvat het initialiseren van de repository, het configureren van de ont
 - Zod voor validatie
 - Playwright voor E2E tests
 - ESLint + Prettier
-
-**❌ Ontbrekende dependencies:**
-- **TipTap editor** (@tiptap/core, @tiptap/starter-kit) - Kritiek voor intake editor
-- **shadcn-svelte components** - UI component library basis ontbreekt
+- **TipTap editor** (@tiptap/core, @tiptap/starter-kit)
+- **shadcn-svelte components** (bits-ui, tailwind-variants)
 
 **✅ Template cleanup voltooid:**
 - ✅ Verwijderd: `Counter.svelte`, demo images
@@ -383,11 +381,9 @@ In deze fase komt de workflow samen in een door AI gegenereerd, maar door de geb
 - **Production Ready** - LoginCard.svelte en InfoPanel.svelte volledig refactored
 
 **🎯 Prioriteit volgende stappen (Fase 2):**
-1. **TipTap installatie** - Rich text editor voor intake functionaliteit  
-2. **shadcn-svelte components** - UI component library basis
-3. **Basis ECD routes** - `/clients` en `/clients/[id]` routing structuur
-4. **Layout & Navigatie** - Globale app layout met header/nav
-5. **Client Management UI** - Cliëntenlijst en dossier weergave
+1. **Basis ECD routes** - `/clients` en `/clients/[id]` routing structuur
+2. **Layout & Navigatie** - Globale app layout met header/nav
+3. **Client Management UI** - Cliëntenlijst en dossier weergave
 
 **🚀 Development Server Status**: ✅ **OPERATIONEEL** - Tailwind CSS PostCSS probleem opgelost
 

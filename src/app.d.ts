@@ -1,4 +1,4 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
+// See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 import { SupabaseClient, Session, User } from '@supabase/supabase-js';
 import { Database } from './lib/types/supabase.js';
@@ -12,12 +12,12 @@ declare global {
 			session: Session | null;
 			user: User | null;
 		}
-		interface PageData {
-			session: Session | null;
-			user: User | null;
-		}
+		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
+	}
+	interface Window {
+		supabase: SupabaseClient<Database>;
 	}
 }
 

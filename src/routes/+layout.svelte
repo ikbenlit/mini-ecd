@@ -2,16 +2,26 @@
 	import '../app.css';
 	import AppLayout from '$lib/components/layout/AppLayout.svelte';
 	import { onMount } from 'svelte';
-	import { authStore, isAuthenticated } from '$lib/stores/auth';
 	import { page } from '$app/stores';
 	import type { LayoutData } from './$types';
+	import { invalidate } from '$app/navigation';
 
 	export let data: LayoutData;
 
-	// Initialize auth store with server-side session data and set up listener (only once)
+	$: ({ supabase, session } = data);
+
 	onMount(() => {
-		// Initialize auth store (sets up auth state listener and uses server data)
-		authStore.initializeAuth(data);
+		const {
+			data: { subscription }
+		} = supabase.auth.onAuthStateChange((event, newSession) => {
+			if (newSession?.expires_at !== session?.expires_at) {
+				invalidate('supabase:auth');
+			}
+		});
+
+		return () => {
+			subscription.unsubscribe();
+		};
 	});
 
 	// Check if we're on an auth route (which has its own layout)
@@ -22,7 +32,7 @@
 {#if isAuthRoute}
 	<slot />
 {:else}
-	<AppLayout>
+	<AppLayout clients={data.clients}>
 		<slot />
 	</AppLayout>
 {/if}
